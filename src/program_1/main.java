@@ -7,6 +7,7 @@ public class main {
 		
 		System.out.println("Hello");
 
+		IO.buildDB();
 	}
 
 }
