@@ -56,17 +56,19 @@ public class fileManager {
 	public static ArrayList getCSVs() {
 
 		ArrayList<String> files = new ArrayList<String>();
-		String dest = "./lib/csv/";
+
+		Path path = Paths.get("./lib/input/");
 		
-		Files.notExists(tempDirectory));
-		
-		try {
-				File file = new File("c:/JavaProgram/demo1.txt");
-			   file.createNewFile();
-			   System.out.println(file.exists());
-			} catch(Exception e) {
-			   e.printStackTrace();
+		if (!Files.exists(path)) {
+			
+			try {
+				Files.createDirectories(path);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			
+		}
 
 		try {
 			DirectoryStream<Path> ds = Files.newDirectoryStream(dir);
@@ -76,7 +78,9 @@ public class fileManager {
 				if (file.getFileName().toString().contains(".csv")) {
 					
 					files.add(file.getFileName().toString());
-					
+					String dest = "./lib/input/";
+					Path filePath = Paths.get(dest+ file.getFileName());
+					Files.move(file, filePath);
 				}
 			}
 
