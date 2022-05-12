@@ -13,14 +13,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class fileManager { 
+public class fileManager {
 
-	static Path dir = Paths.get("./lib/");
+	static Path lib = Paths.get("./lib/");
+	static Path input = Paths.get("./lib/input/");
 
 	public static void buildDB() { // first deletes any DB that already exists and then creates a new one
 
 		try {
-			DirectoryStream<Path> ds = Files.newDirectoryStream(dir);
+			DirectoryStream<Path> ds = Files.newDirectoryStream(lib);
 
 			for (Path file : ds) {
 
@@ -41,7 +42,7 @@ public class fileManager {
 
 	}
 
-	public static void SQLQuery(String q) { // SQL queries that don't return results 
+	public static void SQLQuery(String q) { // SQL queries that don't return results
 
 		try (Connection c = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
 
@@ -52,38 +53,46 @@ public class fileManager {
 			se.printStackTrace();
 		}
 	}
-	
-	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv files
+
+	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv filenames
 
 		ArrayList<String> files = new ArrayList<String>();
 
-		Path path = Paths.get("./lib/input/");
-		
-		if (!Files.exists(path)) {
-			
+		if (!Files.exists(input)) { // builds input dir
+
 			try {
-				Files.createDirectories(path);
+				Files.createDirectories(input);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 
-		try {
-			DirectoryStream<Path> ds = Files.newDirectoryStream(dir);
-			
+		try { // moves all csv to input dir 
+			DirectoryStream<Path> ds = Files.newDirectoryStream(lib);
+
 			for (Path file : ds) {
-				
+
 				if (file.getFileName().toString().contains(".csv")) {
-					
-					files.add(file.getFileName().toString());
+
 					String dest = "./lib/input/";
-					Path filePath = Paths.get(dest+ file.getFileName());
+					Path filePath = Paths.get(dest + file.getFileName());
 					Files.move(file, filePath);
 				}
 			}
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try { // adds all files in input dir to files AL
+			DirectoryStream<Path> ds = Files.newDirectoryStream(input);
+
+			for (Path file : ds) {
+				String dest = "./lib/input/";
+				files.add(dest+file.getFileName().toString());
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
