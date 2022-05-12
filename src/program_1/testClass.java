@@ -7,12 +7,19 @@ public class testClass {
 	public static void main(String args[]) {
 		
 		// builds db and tables
-//		fileManager.buildDB();
-//		fileManager.buildTable(SQL.createTestTable());
-//		fileManager.buildTable(SQL.createVehicleTable());
-		System.out.println(fileManager.getCSVs());
-		// TODO: create index 
-
+		fileManager.buildDB();
+		fileManager.SQLQuery(SQL.createTableVehicle());
+		fileManager.SQLQuery(SQL.createTableTest());
+		
+		// builds indexes for search functions
+//		fileManager.SQLQuery(SQL.creatIndexFirst_used_date());
+//		fileManager.SQLQuery(SQL.creatIndexModel());
+//		fileManager.SQLQuery(SQL.creatIndexTest_milage());
+//		fileManager.SQLQuery(SQL.creatIndexVehicle_id());
+		
+		fileManager.SQLQuery(SQL.createIndices());
+		
+		fileManager.getCSVs();
 	}
 
 }

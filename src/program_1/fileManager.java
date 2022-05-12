@@ -13,11 +13,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class fileManager {
+public class fileManager { 
 
 	static Path dir = Paths.get("./lib/");
 
-	public static void buildDB() {
+	public static void buildDB() { // first deletes any DB that already exists and then creates a new one
 
 		try {
 			DirectoryStream<Path> ds = Files.newDirectoryStream(dir);
@@ -41,19 +41,19 @@ public class fileManager {
 
 	}
 
-	public static void buildTable(String table) {
+	public static void SQLQuery(String q) { // SQL queries that don't return results 
 
 		try (Connection c = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
 
 			Statement s = c.createStatement();
-			int rs = s.executeUpdate(table);
+			int rs = s.executeUpdate(q);
 
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
 	}
-
-	public static ArrayList getCSVs() {
+	
+	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv files
 
 		ArrayList<String> files = new ArrayList<String>();
 
