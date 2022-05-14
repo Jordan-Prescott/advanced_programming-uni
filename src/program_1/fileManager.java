@@ -15,22 +15,28 @@ import java.util.ArrayList;
 
 public class fileManager {
 
+	static Path wd = Paths.get("./");
 	static Path lib = Paths.get("./lib/");
 	static Path input = Paths.get("./lib/input/");
+	static Path[] paths = {Paths.get("./"),Paths.get("./lib/"),Paths.get("./lib/input")};
 
 	public static void buildDB() { // first deletes any DB that already exists and then creates a new one
 
+
 		try {
-			DirectoryStream<Path> ds = Files.newDirectoryStream(lib);
+			for (Path path : paths) {
 
-			for (Path file : ds) {
+				DirectoryStream<Path> ds = Files.newDirectoryStream(path);
 
-				if (file.getFileName().toString().contains(".db")) {
+				for (Path file : ds) {
 
-					Files.delete(file);
+					if (file.getFileName().toString().contains(".db")) {
+
+						Files.delete(file);
+
+					}
 
 				}
-
 			}
 
 			Path newFile = Paths.get("./lib/testsDB.db");
@@ -54,8 +60,8 @@ public class fileManager {
 		}
 	}
 
-	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv filenames
-
+	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv file names
+		
 		ArrayList<String> files = new ArrayList<String>();
 
 		if (!Files.exists(input)) { // builds input dir
@@ -69,16 +75,20 @@ public class fileManager {
 
 		}
 
-		try { // moves all csv to input dir 
-			DirectoryStream<Path> ds = Files.newDirectoryStream(lib);
+		try { // moves all csv to input dir
 
-			for (Path file : ds) {
+			for (Path path : paths) {
 
-				if (file.getFileName().toString().contains(".csv")) {
+				DirectoryStream<Path> ds = Files.newDirectoryStream(path);
 
-					String dest = "./lib/input/";
-					Path filePath = Paths.get(dest + file.getFileName());
-					Files.move(file, filePath);
+				for (Path file : ds) {
+
+					if (file.getFileName().toString().contains(".csv")) {
+
+						String dest = "./lib/input/";
+						Path filePath = Paths.get(dest + file.getFileName());
+						Files.move(file, filePath);
+					}
 				}
 			}
 
@@ -91,7 +101,7 @@ public class fileManager {
 
 			for (Path file : ds) {
 				String dest = "./lib/input/";
-				files.add(dest+file.getFileName().toString());
+				files.add(dest + file.getFileName().toString());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
