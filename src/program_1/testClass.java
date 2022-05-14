@@ -21,24 +21,53 @@ public class testClass {
 		fileManager.SQLQuery(SQL.createTableTest());
 		fileManager.SQLQuery(SQL.createIndices());
 		
-//		for (Object file : files) 
-//		{
-//		
-			try(BufferedReader br = Files.newBufferedReader(Paths.get("./lib/input/testingData.csv"))) {
-//				try(BufferedWriter bw = Files.newBufferedWriter(Paths.get("./lib/testsDB.db"))) {
-					String line;
-					while ((line = br.readLine()) != null) {
-//						bw.write(line);
-//						bw.newLine();
-						System.out.println(line);
-						
+		ArrayList<String> errors = new ArrayList<String>();
+		
+		// TODO: Print out progress every time there is a new and for every 1000 lines
+		for (Object file : files) {
+			try (BufferedReader br = Files.newBufferedReader(Paths.get(file.toString()))) {
+
+				br.readLine(); // read first line to skip headers
+				String line;
+				while ((line = br.readLine()) != null) {
+					
+					String[] values = line.split(",");		
+					if (line.contains("\"")){
+						line += ",ERROR - Conatins \\\"";
+						errors.add(line);
 					}
-//				}
-			}
-			catch (IOException ioe) {
+					else if (line.contains("\\\"")) {
+						line += ",ERROR - Conatins \\\"";
+						errors.add(line);
+					}
+					else if (values.length > 14) {
+						line += ",ERROR - Higehr than 14";
+						errors.add(line);
+					}
+					else if (values.length < 14 || line.contains("UNCLASSIFIED")) {
+						line += ",ERROR - Less than 14 OR UNCLASSIFIED";
+						errors.add(line); 
+					}
+					
+				}
+			} catch (IOException ioe) {
 				System.err.println("IO Exception: " + ioe);
 			}
-//		}
+
+		}
+		
+		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./lib/erros.csv"))) {
+			
+			for (String e : errors) {
+				bw.write(e);
+				bw.newLine();
+			}
+			
+		} catch (IOException ioe) {
+			System.err.println("IO Exception: " + ioe);
+		}
+		System.out.println("DONE");
 	}
+	
 
 }
