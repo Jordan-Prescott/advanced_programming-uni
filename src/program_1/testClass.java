@@ -27,25 +27,42 @@ public class testClass {
 		for (Object file : files) {
 			try (BufferedReader br = Files.newBufferedReader(Paths.get(file.toString()))) {
 
-				br.readLine(); // read first line to skip headers
+//				br.readLine(); // read first line to skip headers
 				String line;
 				while ((line = br.readLine()) != null) {
 					
-					String[] values = line.split(",");		
-					if (line.contains("\"")){
-						line += ",ERROR - Conatins \\\"";
-						errors.add(line);
+					
+
+					if (line.contains("\\\"")) {
+						
+						line = line.replace("\\\"", "");
+
 					}
-					else if (line.contains("\\\"")) {
-						line += ",ERROR - Conatins \\\"";
-						errors.add(line);
+					
+					if (line.contains("\"")) {
+						String[] values = line.split("\"");
+						
+						if (values[1].equals(",")) {
+							line = line.replace(",", ""); // TODO: look at the value and adjust that NOT the line 
+
+						}
+						else {
+							
+						}
+						line = String.join("", values);
+						
 					}
-					else if (values.length > 14) {
+										
+					System.out.println(line);
+					
+					String[] values = line.split(",");	
+					if (values.length > 14) { 
 						line += ",ERROR - Higehr than 14";
 						errors.add(line);
 					}
-					else if (values.length < 14 || line.contains("UNCLASSIFIED")) {
-						line += ",ERROR - Less than 14 OR UNCLASSIFIED";
+					
+					if (values.length < 14) { // data incomplete
+						line += ",ERROR - Less than 14";
 						errors.add(line); 
 					}
 					
@@ -56,16 +73,17 @@ public class testClass {
 
 		}
 		
-		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./lib/erros.csv"))) {
-			
-			for (String e : errors) {
-				bw.write(e);
-				bw.newLine();
-			}
-			
-		} catch (IOException ioe) {
-			System.err.println("IO Exception: " + ioe);
-		}
+		
+//		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./lib/erros.csv"))) {
+//			
+//			for (String e : errors) {
+//				bw.write(e);
+//				bw.newLine();
+//			}
+//			
+//		} catch (IOException ioe) {
+//			System.err.println("IO Exception: " + ioe);
+//		}
 		System.out.println("DONE");
 	}
 	
