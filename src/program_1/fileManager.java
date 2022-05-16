@@ -18,7 +18,8 @@ public class fileManager {
 	static Path wd = Paths.get("./");
 	static Path lib = Paths.get("./lib/");
 	static Path input = Paths.get("./lib/input/");
-	static Path[] paths = {Paths.get("./"),Paths.get("./lib/"),Paths.get("./lib/input")};
+	static Path output = Paths.get("./lib/output/");
+	static Path[] paths = {Paths.get("./"),Paths.get("./lib/"),Paths.get("./lib/input"), Paths.get("./lib/output/")};
 
 	public static void buildDB() { // first deletes any DB that already exists and then creates a new one
 
@@ -59,11 +60,8 @@ public class fileManager {
 			se.printStackTrace();
 		}
 	}
-
-	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv file names
-		
-		ArrayList<String> files = new ArrayList<String>();
-
+	
+	public static void buildDirs() { // builds input and output directories 
 		if (!Files.exists(input)) { // builds input dir
 
 			try {
@@ -74,6 +72,21 @@ public class fileManager {
 			}
 
 		}
+		if (!Files.exists(output)) { // builds output dir
+
+			try {
+				Files.createDirectories(output);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv file names
+		
+		ArrayList<String> files = new ArrayList<String>();
 
 		try { // moves all csv to input dir
 
