@@ -44,3 +44,8 @@ lib/input/dft_test_result-from-2020-04-01_00-00-00-to-2020-07-01_00-00-00.csv
 lib/.DS_Store
 .DS_Store
 .classpath
+hs_err_pid43162.log
+hs_err_pid56208.log
+lib/input/dft_test_result-from-2020-01-01_00-00-00-to-2020-04-01_00-00-00.csv
+lib/input/dft_test_result-from-2020-07-01_00-00-00-to-2020-10-01_00-00-00.csv
+lib/input/dft_test_result-from-2020-10-01_00-00-00-to-2021-01-01_00-00-00.csv

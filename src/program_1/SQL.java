@@ -1,8 +1,23 @@
 package program_1;
 
+/**
+ * SQL
+ * 
+ * This class is a collection of SQL queries used in this program stored in a central place.
+ * Whenever the program executes an SQL query to the database the query is pulled from one of this classes methods.
+ * 
+ * @author jordanprescott
+ *
+ */
 public class SQL { // SQL commands stored in one place for maintenance
 	
-	public static String createTableVehicle() { // creates vehicle table in DB
+	/**
+	 * createTableVehicle
+	 * 
+	 * Creates Vehicle table.
+	 * @return 
+	 */
+	public static String createTableVehicle() { 
 		return ""
 				+ "CREATE TABLE Vehicle ("
 				+ "vehicle_id int(20) NOT NULL,"
@@ -16,7 +31,13 @@ public class SQL { // SQL commands stored in one place for maintenance
 				+ "";
 	}
 
-	public static String createTableTest() { // creates test table in DB
+	/**
+	 * createTableTest
+	 * 
+	 * Creates Test table.
+	 * @return 
+	 */
+	public static String createTableTest() { 
 		return ""
 				+ "CREATE TABLE Test ("
 				+ "test_id int(20) NOT NULL,"
@@ -32,7 +53,13 @@ public class SQL { // SQL commands stored in one place for maintenance
 				+ "";
 	}
 	
-	public static String createIndices() { // creates tables indices
+	/**
+	 * createIndeces
+	 * 
+	 * Creates indices for tables Test and Vehicle.
+	 * @return
+	 */
+	public static String createIndices() {
 		return ""
 				+ "CREATE INDEX idx_Vehicle_vehicle_id ON Vehicle (vehicle_id);"
 				+ "CREATE INDEX idx_Vehicle_model ON Vehicle (model);"
@@ -44,4 +71,35 @@ public class SQL { // SQL commands stored in one place for maintenance
 				+ "";
 				
 	}
+
+	/**
+	 * insertVehicle
+	 * 
+	 * Parameterised query used to insert a row of data into Vehicle table.
+	 * @return
+	 */
+	public static String insertVehicle() {
+		return ""
+				+ "INSERT OR IGNORE INTO Vehicle"
+				+ "(vehicle_id, make, model, colour, fuel_type, cylinder_capacity, first_use_date)"
+				+ "VALUES"
+				+ "(?, ?, ?, ?, ?, ?, ?);";
+				
+	}
+	
+	/**
+	 * insertTest
+	 * 
+	 * Parameterised query used to insert a row of data into Test table.
+	 * @return
+	 */
+	public static String insertTest() {
+		return ""
+				+ "INSERT OR IGNORE INTO Test"
+				+ "(test_id, vehicle_id, test_type, test_class, test_date, test_milage, test_postcode, test_result)"
+				+ "VALUES "
+				+ "(?, ?, ?, ?, ?, ?, ?, ?);";
+				
+	}
+
 }

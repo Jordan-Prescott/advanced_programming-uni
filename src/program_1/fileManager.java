@@ -1,6 +1,6 @@
 package program_1;
 
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -8,20 +8,39 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+
+/**
+ * fileManager class is CRUDs all files and folders used in the project
+ * it is used as a central hub for all integrations with the file system and the files.
+ * 
+ * There is one exception to the above in main where the SQL INSERTS of the data is performed for 
+ * efficiency.
+ * 
+ * @author jordanprescott
+ * 
+ */
 public class fileManager {
 
 	static Path wd = Paths.get("./");
 	static Path lib = Paths.get("./lib/");
 	static Path input = Paths.get("./lib/input/");
 	static Path output = Paths.get("./lib/output/");
-	static Path[] paths = {Paths.get("./"),Paths.get("./lib/"),Paths.get("./lib/input"), Paths.get("./lib/output/")};
+	static Path[] paths = {wd,lib,input,output};
 
-	public static void buildDB() { // first deletes any DB that already exists and then creates a new one
+	/**
+	 * buildDB 
+	 * 
+	 * first loops through the path list checking if there is an existing database inside the folders if 
+	 * a database is found is deleted, if there is no data base found it moves on.
+	 * 
+	 * Once all folders have been checked the a new database called tests.db is created inside ./lib/ for future reference in the program.
+	 * 
+	 */
+	public static void buildDB() { 
 
 
 		try {
@@ -49,41 +68,42 @@ public class fileManager {
 
 	}
 
-	public static void SQLQuery(String q) { // SQL queries that don't return results
-
-		try (Connection c = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
-
-			Statement s = c.createStatement();
-			int rs = s.executeUpdate(q);
-
-		} catch (SQLException se) {
-			se.printStackTrace();
-		}
-	}
-	
-	public static void buildDirs() { // builds input and output directories 
-		if (!Files.exists(input)) { // builds input dir
+	/**
+	 * buildDirs
+	 * 
+	 * Checks if the input and output folders exist as they are used in later in the program, if not create them.
+	 * t
+	 */
+	public static void buildDirs() {
+		if (!Files.exists(input)) { 
 
 			try {
 				Files.createDirectories(input);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
-		if (!Files.exists(output)) { // builds output dir
+		if (!Files.exists(output)) { 
 
 			try {
 				Files.createDirectories(output);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
 	}
 
+	/**
+	 * getCSVs
+	 * 
+	 * First loops through the Path list and checks for CSV file, if found the file is moved ./lib/input.
+	 * Secondly it loops through the ./lib/input to get the new path of the file and add this path to ArrayList files.
+	 * Finally the files array list is returned.
+	 * 
+	 * @return ArrayList file - contains paths of all CSV files
+	 */
 	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv file names
 		
 		ArrayList<String> files = new ArrayList<String>();
@@ -122,4 +142,49 @@ public class fileManager {
 
 		return files;
 	}
+	
+	/**
+	 * SQLQuery
+	 * 
+	 * Takes in an SQL query as a parameter type String and executes to database with no update. 
+	 * Used for creating tables and indices. 
+	 * 
+	 * @param q 
+	 * 
+	 */
+	public static void SQLQuery(String q) { // SQL queries that don't return results
+
+		try (Connection c = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
+
+			Statement s = c.createStatement();
+			int rs = s.executeUpdate(q);
+
+		} catch (SQLException se) {
+			se.printStackTrace();
+		}
+	}
+	
+	/**
+	 * writeErrors
+	 * 
+	 * Takes in arrayLis of errors collected in main and writes them to a file for viewing later.
+	 * 
+	 * @param errors
+	 */
+	public static void writeErrors(ArrayList errors) { // writes the errors and adjustments caught in main
+		
+		ArrayList<String> err = errors;
+
+		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./lib/output/errors.txt"))) {
+			for (String e : err) {
+				bw.write(e);
+				bw.newLine();
+
+			}
+
+		} catch (IOException ioe) {
+		}
+
+	}
 }
+
