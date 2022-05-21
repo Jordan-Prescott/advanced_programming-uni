@@ -138,8 +138,8 @@ public class testClass {
 
 		try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
 
-			Statement b = con.createStatement();
-			int begin = b.executeUpdate("BEGIN TRANSACTION;");
+//			Statement b = con.createStatement();
+//			int begin = b.executeUpdate("BEGIN TRANSACTION;");
 
 			for (Object file : files) { // loops through files
 
@@ -178,7 +178,7 @@ public class testClass {
 							if (line.contains("\\\"") || line.contains(".") || line.contains(",,") || line.contains(",,,")
 									|| line.contains("\"") || line.contains("\",\"")) {
 
-								bw.write("Altered data on File: " + fileName.toString() + " Row: " + r);
+								bw.write("Altered data on File: " + file.toString() + " Row: " + r);
 								bw.newLine();
 
 							}
@@ -245,21 +245,21 @@ public class testClass {
 
 							}
 							
-							if (ct == 1000000) {
-								Statement c = con.createStatement();
-								int commit = c.executeUpdate("COMMIT;");
-								Statement ba = con.createStatement();
-								int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
-								ct = 0;
-							}
+//							if (ct == 1000000) {
+//								Statement c = con.createStatement();
+//								int commit = c.executeUpdate("COMMIT;");
+//								Statement ba = con.createStatement();
+//								int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
+//								ct = 0;
+//							}
 
 						}
 
 					} catch (IOException | StringIndexOutOfBoundsException | SQLException e) { // Buffered Writer
-						Statement c = con.createStatement();
-						int commit = c.executeUpdate("COMMIT;");
-						Statement ba = con.createStatement();
-						int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
+//						Statement c = con.createStatement();
+//						int commit = c.executeUpdate("COMMIT;");
+//						Statement ba = con.createStatement();
+//						int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
 					}
 
 				} catch (IOException e) { // Buffered Reader
@@ -267,8 +267,8 @@ public class testClass {
 				}
 			}
 
-			Statement c = con.createStatement();
-			int commit = c.executeUpdate("COMMIT;");
+//			Statement c = con.createStatement();
+//			int commit = c.executeUpdate("COMMIT;");
 			
 		} catch (SQLException se) { // SQL Con
 			se.printStackTrace();
