@@ -29,6 +29,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 public class GUI {
@@ -52,6 +54,7 @@ public class GUI {
 	private JButton search;
 	private JButton clearSearch;
 	private JButton analyse;
+	private JButton help;
 
 	private JLabel lMake;
 	private JLabel lModel;
@@ -74,10 +77,6 @@ public class GUI {
 	private JLabel srlFuelType;
 	private JLabel srlCylinderCapacity;
 	
-	
-	
-	
-
 	private JTable searchedData;
 	private JScrollPane adScrollPane;
 
@@ -105,6 +104,7 @@ public class GUI {
 		search = new JButton("Search");
 		clearSearch = new JButton("Clear");
 		analyse = new JButton("Analyse");
+		help = new JButton("Help?");
 
 		lMake = new JLabel("Make:");
 		lModel = new JLabel("Model:");
@@ -112,7 +112,7 @@ public class GUI {
 		lMiles = new JLabel("Miles:");
 		lYear = new JLabel("Year:");
 		
-		srlMake = new JLabel("Make:");
+		srlMake = new JLabel("");
 		srlModel = new JLabel("Model:");
 		srlPostcode = new JLabel("Postcode:");
 		srlMiles = new JLabel("Miles:");
@@ -148,6 +148,8 @@ public class GUI {
 		searchData();
 		clearSearch();
 		analyseData();
+		helpRequest();
+		sidePanel();
 
 		cp.setLayout(new BorderLayout(10, 10));
 		cp.add(center, BorderLayout.CENTER);
@@ -184,7 +186,6 @@ public class GUI {
 		searchedDataPanel.setLayout(new BorderLayout());
 		searchedDataPanel.add(adScrollPane, BorderLayout.CENTER);
 
-		
 		singleRowPanel.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.decode("#5B9279")));
 		singleRowPanel.setBackground(Color.decode("#5B9279"));
 		singleRowPanel.add(srlMake);
@@ -222,8 +223,9 @@ public class GUI {
 		east.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 10, Color.decode("#EAE6E5")));
 
 		south.setPreferredSize(new Dimension(0, 50));
-		south.setBackground(Color.LIGHT_GRAY);
-		south.setLayout(new BorderLayout());
+		south.setBackground(Color.decode("#EAE6E5"));
+		south.setLayout(new BorderLayout(10, 0));
+		south.add(help, BorderLayout.WEST);
 		south.add(analyse, BorderLayout.CENTER);
 		south.setBorder(BorderFactory.createMatteBorder(0, 10, 10, 10, Color.decode("#EAE6E5")));
 
@@ -275,6 +277,11 @@ public class GUI {
 		analyse.setOpaque(true);
 		analyse.setBorderPainted(false);
 		analyse.setForeground(Color.decode("#EAE6E5"));
+		
+		help.setBackground(Color.decode("#B74F6F"));
+		help.setOpaque(true);
+		help.setBorderPainted(false);
+		help.setForeground(Color.decode("#EAE6E5"));
 
 		clearSearch.setPreferredSize(new Dimension(100, 22));
 		clearSearch.setBackground(Color.decode("#5B9279"));
@@ -469,10 +476,12 @@ public class GUI {
 		search.addActionListener(searchButtonListener);
 	}
 
+	
 	public void clearSearch() {
 		ActionListener searchButtonListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
+				System.out.println("Clear");
 				searchedData.setModel(new DefaultTableModel());
 
 			}
@@ -492,4 +501,32 @@ public class GUI {
 
 		analyse.addActionListener(analyseButtonListener);
 	}
+	
+	public void helpRequest() {
+		ActionListener helpButtonListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				System.out.println("Help");
+
+			}
+		};
+
+		help.addActionListener(helpButtonListener);
+	}
+	
+	public void sidePanel() {
+		ListSelectionListener JTableListener = new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent lse) {
+				System.out.println("Table");
+				System.out.println(((DefaultTableModel) searchedData.getModel()).getDataVector().elementAt(searchedData.getSelectedRow()));
+
+			}
+		};
+
+		searchedData.getSelectionModel().addListSelectionListener(JTableListener);
+	}
 }
+
+	
