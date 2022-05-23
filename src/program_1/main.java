@@ -1,3 +1,4 @@
+
 package program_1;
 
 import java.io.BufferedReader;
@@ -268,14 +269,14 @@ public class main {
 							
 						}
 						
-//						if(ct == 1000000) {
-//							Statement c = con.createStatement();
-//							int commit = c.executeUpdate("COMMIT;");
-//							ct = 0;
-//							
-//							Statement ba = con.createStatement();
-//							int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
-//						}
+						if(ct == 1000000) {
+							Statement c = con.createStatement();
+							int commit = c.executeUpdate("COMMIT;");
+							ct = 0;
+							
+							Statement ba = con.createStatement();
+							int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
+						}
 
 					}
 

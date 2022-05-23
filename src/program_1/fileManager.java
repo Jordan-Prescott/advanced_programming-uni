@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -186,5 +187,45 @@ public class fileManager {
 		}
 
 	}
+	
+//	public static void pSQLQuery(ArrayList validData) {
+//
+//		
+//		try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
+//		Statement b = con.createStatement();
+//		int begin = b.executeUpdate("BEGIN TRANSACTION;");
+//
+//		for (String d : validData) {
+//			String[] values = d.split(",");
+//			PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
+//			vehicle.setInt(1, Integer.parseInt(values[1]));
+//			vehicle.setString(2, values[8]);
+//			vehicle.setString(3, values[9]);
+//			vehicle.setString(4, values[10]);
+//			vehicle.setString(5, values[11]);
+//			vehicle.setInt(6, Integer.parseInt(values[12]));
+//			vehicle.setString(7, values[13]);
+//			int vResult = vehicle.executeUpdate();
+//
+//			PreparedStatement test = con.prepareStatement(SQL.insertTest());
+//			test.setInt(1, Integer.parseInt(values[0]));
+//			test.setInt(2, Integer.parseInt(values[1]));
+//			test.setString(3, values[4]);
+//			test.setString(4, values[3]);
+//			test.setString(5, values[2]);
+//			test.setInt(6, Integer.parseInt(values[6]));
+//			test.setString(7, values[7]);
+//			test.setString(8, values[5]);
+//			int tResult = test.executeUpdate();
+//		}
+//		
+//		Statement c = con.createStatement();
+//		int commit = c.executeUpdate("COMMIT;");
+//		
+//		} catch (SQLException se) {
+//			se.printStackTrace();
+//		}
+//		
+//	}
 }
 

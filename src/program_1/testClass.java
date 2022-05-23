@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class testClass {
 
-	static ArrayList<String> errors = new ArrayList<String>();
+	static ArrayList<String> validData = new ArrayList<String>();
 	static String fileName;
 
 	public static String wash(String line, int row) {
@@ -138,13 +138,11 @@ public class testClass {
 
 		try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
 
-//			Statement b = con.createStatement();
-//			int begin = b.executeUpdate("BEGIN TRANSACTION;");
 
 			for (Object file : files) { // loops through files
 
 				fileName = file.toString();
-				System.out.println("X");
+				System.out.println("\nX");
 				int r = 0; // row count
 
 				try (BufferedReader br = Files.newBufferedReader(Paths.get(file.toString()))) {// loops through lines
@@ -189,11 +187,11 @@ public class testClass {
 							long count = washed.chars().filter(ch -> ch == ',').count();
 
 							if (count > 13) { // should not happen as data is cleaned
-								bw.write("More than 14 colunms on File: " + file.toString() + " Row: " + r);
+								bw.write("More than 14 colunms on File: " + fileName + " Row: " + r);
 								bw.newLine();
 								discard = true;
 							} else if (count < 13) { // indicates data is incomplete
-								bw.write("Less than 14 colunms on File: " + file.toString() + " Row: " + r);
+								bw.write("Less than 14 colunms on File: " + fileName + " Row: " + r);
 								bw.newLine();
 								discard = true;
 							} else if (washed.contains("#")) { // indicates what data is missing
@@ -209,7 +207,7 @@ public class testClass {
 									i++;
 								}
 
-								String errorMessage = "Missing data on File: " + file.toString() + " Row: " + r
+								String errorMessage = "Missing data on File: " + fileName + " Row: " + r
 										+ " Colunms: ";
 
 								for (int c : colunm) {
@@ -222,53 +220,108 @@ public class testClass {
 							}
 
 							if (!discard) {
-								PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
-								vehicle.setInt(1, Integer.parseInt(values[1]));
-								vehicle.setString(2, values[8]);
-								vehicle.setString(3, values[9]);
-								vehicle.setString(4, values[10]);
-								vehicle.setString(5, values[11]);
-								vehicle.setInt(6, Integer.parseInt(values[12]));
-								vehicle.setString(7, values[13]);
-								int vResult = vehicle.executeUpdate();
-
-								PreparedStatement test = con.prepareStatement(SQL.insertTest());
-								test.setInt(1, Integer.parseInt(values[0]));
-								test.setInt(2, Integer.parseInt(values[1]));
-								test.setString(3, values[4]);
-								test.setString(4, values[3]);
-								test.setString(5, values[2]);
-								test.setInt(6, Integer.parseInt(values[6]));
-								test.setString(7, values[7]);
-								test.setString(8, values[5]);
-								int tResult = test.executeUpdate();
+								
+								validData.add(washed);
+//								PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
+//								vehicle.setInt(1, Integer.parseInt(values[1]));
+//								vehicle.setString(2, values[8]);
+//								vehicle.setString(3, values[9]);
+//								vehicle.setString(4, values[10]);
+//								vehicle.setString(5, values[11]);
+//								vehicle.setInt(6, Integer.parseInt(values[12]));
+//								vehicle.setString(7, values[13]);
+//								int vResult = vehicle.executeUpdate();
+//
+//								PreparedStatement test = con.prepareStatement(SQL.insertTest());
+//								test.setInt(1, Integer.parseInt(values[0]));
+//								test.setInt(2, Integer.parseInt(values[1]));
+//								test.setString(3, values[4]);
+//								test.setString(4, values[3]);
+//								test.setString(5, values[2]);
+//								test.setInt(6, Integer.parseInt(values[6]));
+//								test.setString(7, values[7]);
+//								test.setString(8, values[5]);
+//								int tResult = test.executeUpdate();
 
 							}
 							
-//							if (ct == 1000000) {
-//								Statement c = con.createStatement();
-//								int commit = c.executeUpdate("COMMIT;");
-//								Statement ba = con.createStatement();
-//								int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
-//								ct = 0;
-//							}
+							if (validData.size() == 100000) {
+								Statement b = con.createStatement();
+								int begin = b.executeUpdate("BEGIN TRANSACTION;");
+
+									for (String v : validData) {
+										String[] data = v.split(",");
+										PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
+										vehicle.setInt(1, Integer.parseInt(values[1]));
+										vehicle.setString(2, values[8]);
+										vehicle.setString(3, values[9]);
+										vehicle.setString(4, values[10]);
+										vehicle.setString(5, values[11]);
+										vehicle.setInt(6, Integer.parseInt(values[12]));
+										vehicle.setString(7, values[13]);
+										int vResult = vehicle.executeUpdate();
+
+										PreparedStatement test = con.prepareStatement(SQL.insertTest());
+										test.setInt(1, Integer.parseInt(values[0]));
+										test.setInt(2, Integer.parseInt(values[1]));
+										test.setString(3, values[4]);
+										test.setString(4, values[3]);
+										test.setString(5, values[2]);
+										test.setInt(6, Integer.parseInt(values[6]));
+										test.setString(7, values[7]);
+										test.setString(8, values[5]);
+										int tResult = test.executeUpdate();
+									}
+									
+								Statement c = con.createStatement();
+								int commit = c.executeUpdate("COMMIT;");
+								validData.clear();
+								
+							}
 
 						}
 
-					} catch (IOException | StringIndexOutOfBoundsException | SQLException e) { // Buffered Writer
-//						Statement c = con.createStatement();
-//						int commit = c.executeUpdate("COMMIT;");
-//						Statement ba = con.createStatement();
-//						int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
+					} catch (IOException | StringIndexOutOfBoundsException e) { 
+
 					}
 
 				} catch (IOException e) { // Buffered Reader
 
 				}
 			}
-
+			
+			
+//			Statement b = con.createStatement();
+//			int begin = b.executeUpdate("BEGIN TRANSACTION;");
+//
+//			for (String d : validData) {
+//				String[] values = d.split(",");
+//				PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
+//				vehicle.setInt(1, Integer.parseInt(values[1]));
+//				vehicle.setString(2, values[8]);
+//				vehicle.setString(3, values[9]);
+//				vehicle.setString(4, values[10]);
+//				vehicle.setString(5, values[11]);
+//				vehicle.setInt(6, Integer.parseInt(values[12]));
+//				vehicle.setString(7, values[13]);
+//				int vResult = vehicle.executeUpdate();
+//
+//				PreparedStatement test = con.prepareStatement(SQL.insertTest());
+//				test.setInt(1, Integer.parseInt(values[0]));
+//				test.setInt(2, Integer.parseInt(values[1]));
+//				test.setString(3, values[4]);
+//				test.setString(4, values[3]);
+//				test.setString(5, values[2]);
+//				test.setInt(6, Integer.parseInt(values[6]));
+//				test.setString(7, values[7]);
+//				test.setString(8, values[5]);
+//				int tResult = test.executeUpdate();
+//			}
+//			
 //			Statement c = con.createStatement();
 //			int commit = c.executeUpdate("COMMIT;");
+			
+			
 			
 		} catch (SQLException se) { // SQL Con
 			se.printStackTrace();
