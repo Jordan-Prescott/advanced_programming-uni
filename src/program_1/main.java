@@ -172,11 +172,12 @@ public class main {
 		}
 
 		try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
-			
+			Statement b = con.createStatement();
+			int begin = b.executeUpdate("BEGIN TRANSACTION;");
+			PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
+			PreparedStatement test = con.prepareStatement(SQL.insertTest());
 			
 			for (Object file : files) { // loops through files
-				Statement b = con.createStatement();
-				int begin = b.executeUpdate("BEGIN TRANSACTION;");
 
 				fileName = file.toString();
 				System.out.println("\nX");
@@ -246,7 +247,7 @@ public class main {
 						}
 						
 						if (!discard) {
-							PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
+							
 							vehicle.setInt(1, Integer.parseInt(values[1]));
 							vehicle.setString(2, values[8]);
 							vehicle.setString(3, values[9]);
@@ -256,7 +257,6 @@ public class main {
 							vehicle.setString(7, values[13]);
 							int vResult = vehicle.executeUpdate();
 							
-							PreparedStatement test = con.prepareStatement(SQL.insertTest());
 							test.setInt(1, Integer.parseInt(values[0]));
 							test.setInt(2, Integer.parseInt(values[1]));
 							test.setString(3, values[4]);
@@ -268,15 +268,6 @@ public class main {
 							int tResult = test.executeUpdate();
 							
 						}
-						
-						if(ct == 1000000) {
-							Statement c = con.createStatement();
-							int commit = c.executeUpdate("COMMIT;");
-							ct = 0;
-							
-							Statement ba = con.createStatement();
-							int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
-						}
 
 					}
 
@@ -287,10 +278,10 @@ public class main {
 					int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
 				}
 
-				Statement c = con.createStatement();
-				int commit = c.executeUpdate("COMMIT;");
 			}
 		
+			Statement c = con.createStatement();
+			int commit = c.executeUpdate("COMMIT;");
 		
 		} catch (SQLException se) {
 			se.printStackTrace();
