@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,7 +21,6 @@ import java.util.concurrent.TimeUnit;
  * data is valid to to be applied the DB, if the data is valid it them calls SQL and pushes queries to the DB.
  * 
  * @author jordanprescott
- *
  */
 public class main {
 
@@ -36,8 +34,8 @@ public class main {
 	 * If they are found the line is adjusted either removing characters that should not be there such as \ or replacing a character with what should be there like 3,8 should be 3.8
 	 * Finally, when the data is washed it is returned back to the main method where it then goes through data validation checks.
 	 * 
-	 * @param line
-	 * @param row
+	 * @param line - line read in main passed in for washing 
+	 * @param row - row number used for error indication
 	 * @return line
 	 */
 	public static String wash(String line, int row) {
@@ -108,7 +106,7 @@ public class main {
 	 * 
 	 * This method is used to determine where data is missing from a line in the CSV. The parameter c is passed to this method which is a array index, depending on the number passed this will indicate 
 	 * which column in the line is missing data and the column name is then returned.
-	 * @param c
+	 * @param c - column number used to return column name
 	 * @return column
 	 */
 	public static String tableFeild(int c) { // returns the SQL table field in relation to order of the column in CSV
@@ -190,23 +188,21 @@ public class main {
 					String line;
 
 					// counts
-					int l = 0;
-					int t = 1;
-					int ct = 0;
+					int l = 0; // line
+					int nl = 1; // new line
 
 					while ((line = br.readLine()) != null) {
 
 						Boolean discard = false;
 						r++;
 						l++;
-						ct++;
 
 						if (l == 1000) { // indicates every 1000 lines
 							System.out.print(".");
-							t++;
-							if (t == 150) {
+							nl++;
+							if (nl == 150) {
 								System.out.println("\n");
-								t = 0;
+								nl = 0;
 							}
 							l = 0;
 						}
@@ -214,9 +210,9 @@ public class main {
 						String washed = wash(line, r); // removes excess characters and formats data
 
 						String[] values = washed.split(",");
-						long count = washed.chars().filter(ch -> ch == ',').count();
+						long count = washed.chars().filter(ch -> ch == ',').count(); // counts commas in a string
 
-						if (count > 13) { // should not happen as data is cleaned
+						if (count > 13) { // should have been caught in the washed method but captures if there is too much data
 							errors.add("More than 14 colunms on File: " + file.toString() + " Row: " + r);
 							discard = true;
 						} else if (count < 13) { // indicates data is incomplete
@@ -246,7 +242,7 @@ public class main {
 
 						}
 						
-						if (!discard) {
+						if (!discard) { // creates statement if data is valid other wise discard the line
 							
 							vehicle.setInt(1, Integer.parseInt(values[1]));
 							vehicle.setString(2, values[8]);
@@ -272,10 +268,6 @@ public class main {
 					}
 
 				} catch (IOException | StringIndexOutOfBoundsException | SQLException e) {
-					Statement c = con.createStatement();
-					int commit = c.executeUpdate("COMMIT;");
-					Statement ba = con.createStatement();
-					int beginAgain = ba.executeUpdate("BEGIN TRANSACTION;");
 				}
 
 			}
@@ -284,22 +276,11 @@ public class main {
 			int commit = c.executeUpdate("COMMIT;");
 		
 		} catch (SQLException se) {
-			se.printStackTrace();
 		}
 
-		
 		fileManager.writeErrors(errors);
 		System.out.print(" Data Input Complete\n");
-
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Press enter key to see errors.");
-		String enter = sc.nextLine();
-		sc.close();
-		for (String e : errors) {
-			System.out.println(e);
-		}
-
-		System.out.println("\nComplete list found at: ./lib/output/errors.txt");
+		System.out.println("\nComplete list of errors found at: ./lib/output/errors.txt");
 
 	}
 

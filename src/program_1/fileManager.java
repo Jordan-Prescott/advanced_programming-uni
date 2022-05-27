@@ -22,7 +22,6 @@ import java.util.ArrayList;
  * efficiency.
  * 
  * @author jordanprescott
- * 
  */
 public class fileManager {
 
@@ -39,17 +38,14 @@ public class fileManager {
 	 * a database is found is deleted, if there is no data base found it moves on.
 	 * 
 	 * Once all folders have been checked the a new database called tests.db is created inside ./lib/ for future reference in the program.
-	 * 
 	 */
 	public static void buildDB() { 
-
-
 		try {
-			for (Path path : paths) {
+			for (Path path : paths) { 
 
 				DirectoryStream<Path> ds = Files.newDirectoryStream(path);
 
-				for (Path file : ds) {
+				for (Path file : ds) { // runs through dires and removes any existing db
 
 					if (file.getFileName().toString().contains(".db")) {
 
@@ -60,7 +56,7 @@ public class fileManager {
 				}
 			}
 
-			Path newFile = Paths.get("./lib/testsDB.db");
+			Path newFile = Paths.get("./lib/testsDB.db"); // creates a new db
 			Files.createFile(newFile);
 
 		} catch (IOException e) {
@@ -73,7 +69,6 @@ public class fileManager {
 	 * buildDirs
 	 * 
 	 * Checks if the input and output folders exist as they are used in later in the program, if not create them.
-	 * t
 	 */
 	public static void buildDirs() {
 		if (!Files.exists(input)) { 
@@ -103,9 +98,9 @@ public class fileManager {
 	 * Secondly it loops through the ./lib/input to get the new path of the file and add this path to ArrayList files.
 	 * Finally the files array list is returned.
 	 * 
-	 * @return ArrayList file - contains paths of all CSV files
+	 * @return ArrayList file contains paths of all CSV files
 	 */
-	public static ArrayList getCSVs() { // moves all csv files into input if not already and returns an array list of csv file names
+	public static ArrayList getCSVs() { 
 		
 		ArrayList<String> files = new ArrayList<String>();
 
@@ -150,10 +145,9 @@ public class fileManager {
 	 * Takes in an SQL query as a parameter type String and executes to database with no update. 
 	 * Used for creating tables and indices. 
 	 * 
-	 * @param q 
-	 * 
+	 * @param q - query to executed to the db
 	 */
-	public static void SQLQuery(String q) { // SQL queries that don't return results
+	public static void SQLQuery(String q) { 
 
 		try (Connection c = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
 
@@ -170,9 +164,9 @@ public class fileManager {
 	 * 
 	 * Takes in arrayLis of errors collected in main and writes them to a file for viewing later.
 	 * 
-	 * @param errors
+	 * @param errors - ArrayList of errors to be written errors.txt
 	 */
-	public static void writeErrors(ArrayList errors) { // writes the errors and adjustments caught in main
+	public static void writeErrors(ArrayList errors) { 
 		
 		ArrayList<String> err = errors;
 
@@ -188,44 +182,5 @@ public class fileManager {
 
 	}
 	
-//	public static void pSQLQuery(ArrayList validData) {
-//
-//		
-//		try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
-//		Statement b = con.createStatement();
-//		int begin = b.executeUpdate("BEGIN TRANSACTION;");
-//
-//		for (String d : validData) {
-//			String[] values = d.split(",");
-//			PreparedStatement vehicle = con.prepareStatement(SQL.insertVehicle());
-//			vehicle.setInt(1, Integer.parseInt(values[1]));
-//			vehicle.setString(2, values[8]);
-//			vehicle.setString(3, values[9]);
-//			vehicle.setString(4, values[10]);
-//			vehicle.setString(5, values[11]);
-//			vehicle.setInt(6, Integer.parseInt(values[12]));
-//			vehicle.setString(7, values[13]);
-//			int vResult = vehicle.executeUpdate();
-//
-//			PreparedStatement test = con.prepareStatement(SQL.insertTest());
-//			test.setInt(1, Integer.parseInt(values[0]));
-//			test.setInt(2, Integer.parseInt(values[1]));
-//			test.setString(3, values[4]);
-//			test.setString(4, values[3]);
-//			test.setString(5, values[2]);
-//			test.setInt(6, Integer.parseInt(values[6]));
-//			test.setString(7, values[7]);
-//			test.setString(8, values[5]);
-//			int tResult = test.executeUpdate();
-//		}
-//		
-//		Statement c = con.createStatement();
-//		int commit = c.executeUpdate("COMMIT;");
-//		
-//		} catch (SQLException se) {
-//			se.printStackTrace();
-//		}
-//		
-//	}
 }
 

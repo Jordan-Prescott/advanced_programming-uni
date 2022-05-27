@@ -1,12 +1,9 @@
 package program_2;
 
-public class main {
+public class JFreeChart {
 
 	public static void main(String[] args) {
-
-		GUI gui = new GUI();
-		gui.setUpGUI();
-	
+		// TODO Auto-generated method stub
 
 	}
 

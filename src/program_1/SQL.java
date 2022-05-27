@@ -7,7 +7,6 @@ package program_1;
  * Whenever the program executes an SQL query to the database the query is pulled from one of this classes methods.
  * 
  * @author jordanprescott
- *
  */
 public class SQL { // SQL commands stored in one place for maintenance
 	
@@ -15,7 +14,7 @@ public class SQL { // SQL commands stored in one place for maintenance
 	 * createTableVehicle
 	 * 
 	 * Creates Vehicle table.
-	 * @return 
+	 * @return SQL query to create the vehicle table
 	 */
 	public static String createTableVehicle() { 
 		return ""
@@ -35,7 +34,7 @@ public class SQL { // SQL commands stored in one place for maintenance
 	 * createTableTest
 	 * 
 	 * Creates Test table.
-	 * @return 
+	 * @return SQL query to create the test table
 	 */
 	public static String createTableTest() { 
 		return ""
@@ -57,7 +56,7 @@ public class SQL { // SQL commands stored in one place for maintenance
 	 * createIndeces
 	 * 
 	 * Creates indices for tables Test and Vehicle.
-	 * @return
+	 * @return SQL query to create db indexes 
 	 */
 	public static String createIndices() {
 		return ""
@@ -76,7 +75,7 @@ public class SQL { // SQL commands stored in one place for maintenance
 	 * insertVehicle
 	 * 
 	 * Parameterised query used to insert a row of data into Vehicle table.
-	 * @return
+	 * @return returns vehicle table parameterised query used in main 
 	 */
 	public static String insertVehicle() {
 		return ""
@@ -91,7 +90,7 @@ public class SQL { // SQL commands stored in one place for maintenance
 	 * insertTest
 	 * 
 	 * Parameterised query used to insert a row of data into Test table.
-	 * @return
+	 * @return returns test table parameterised query used in main 
 	 */
 	public static String insertTest() {
 		return ""

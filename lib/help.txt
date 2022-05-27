@@ -1,0 +1,53 @@
+Help Page.
+ ______________________________________________________________________
+|//////////////////////////////////////////////////////////////////////|
+|////////////////////////////////Search////////////////////////////////|
+|______________________________________________________________________|
+ ___________________________________________   ________________________
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|//////////////////All Data/////////////////| |///////Single Row///////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|///////////////////////////////////////////| |////////////////////////|
+|___________________________________________| |________________________|
+ _______   ____________________________________________________________
+|/Help!/| |/////////////////////////Analyse////////////////////////////|
+|_______| |____________________________________________________________|
+
+#Panels
+	 #Search:
+		Takes in search criteria and then queries the database on the criteria entered. 
+		The Search button triggers the query and the Clear button cancels/ clears the search.
+			Buttons:
+			* Make - The brand/ make of the car you are searching for example 'BMW'
+			* Model - The spececific model of car built for example '3 Series'
+			* Postcode - The postcode of the area where the test took place
+			* Miles - This has two functionalities, either enter one full nunber such as 99999 
+			and this will search for cars with this amount of miles at the test date. to 
+			search a range include a '-' between the start and end miles for example '100-1000'
+			* Year - Looks for a year of the test for example '2008'
+			* Search - Takes the criteria placed in the text feilds and queries the data base
+			* Clear - Clears the search result or cancels the search
+	 #All Data:
+		Returns all the data in a JTable from the search, the table is resposive 
+		and you can sort data by clicking the header of a colunm and it will cort by this header.
+	 #Single Row:
+		Shows all details of a selected row in the All Data panel. All Data will returned 
+		the searched criteria where single row will include all data it holds on that 
+		specific test. By selecting a test in the All Data panel you can see this data.
+	 #Help:
+		This button will pop up this page for the user to get information on the program 
+		and how it works.
+	 #Analyse: 
+		This button looks to anaylse the data returned from the search by age and pass rate. 
+		For example searching for BMW 3 Series will display the pass rate for the past ten years.
+

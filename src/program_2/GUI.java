@@ -12,18 +12,29 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -32,6 +43,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
+import program_1.SQL;
 
 public class GUI {
 
@@ -255,7 +268,7 @@ public class GUI {
 		postcode.setFont(new Font("SansSerif", Font.ITALIC, 13));
 
 		miles.setPreferredSize(new Dimension(100, 30));
-		miles.setText("1 - 999999");
+		miles.setText("1-999999");
 		miles.setBackground(Color.decode("#EAE6E5"));
 		miles.setForeground(Color.decode("#A3938F"));
 		miles.setFont(new Font("SansSerif", Font.ITALIC, 13));
@@ -409,6 +422,7 @@ public class GUI {
 		searchedData.setAutoCreateRowSorter(true);
 	}
 
+	
 	public void textFieldLabel() {
 		MouseListener textFieldListener = new MouseAdapter() {
 			@Override
@@ -444,26 +458,48 @@ public class GUI {
 				System.out.println("Search");
 				
 				try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
-					Statement st = con.createStatement();
-					ResultSet rs = st.executeQuery(SQL.selectAll());
-					ResultSetMetaData rsmd = rs.getMetaData();
-					DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
 					
-					int cols=rsmd.getColumnCount();
-					String[] cName = new String[cols];
-					for(int c=0;c<cols;c++) {
-						cName[c]=rsmd.getColumnName(c+1);
-						model.setColumnIdentifiers(cName);
-					}
+					String query = null;
+					String base = SQL2.search();
+					String tfMake = make.getText();
+					String tfModel = model.getText();
+					String tfPostcode = postcode.getText();
+					String tfMiles = miles.getText();
+					String tfYear = year.getText();
 					
-		            while (rs.next()) {
-		                Vector<String> vector = new Vector<String>();
-		                for (int columnIndex = 1; columnIndex <= cols; columnIndex++) {
-		                vector.add(rs.getString(columnIndex)); 
-		                }
-		                
-		                model.addRow(vector);
-		            }
+					System.out.println(tfMake);
+					System.out.println(tfModel);
+					System.out.println(tfPostcode);
+					System.out.println(tfMiles);
+					System.out.println(tfYear);
+					
+					
+					
+					
+					
+					
+					
+					
+//					Statement st = con.createStatement();
+//					ResultSet rs = st.executeQuery(query);
+//					ResultSetMetaData rsmd = rs.getMetaData();
+//					DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
+//					
+//					int cols=rsmd.getColumnCount();
+//					String[] cName = new String[cols];
+//					for(int c=0;c<cols;c++) {
+//						cName[c]=rsmd.getColumnName(c+1);
+//						model.setColumnIdentifiers(cName);
+//					}
+//					
+//		            while (rs.next()) {
+//		                Vector<String> vector = new Vector<String>();
+//		                for (int columnIndex = 1; columnIndex <= cols; columnIndex++) {
+//		                vector.add(rs.getString(columnIndex)); 
+//		                }
+//		                
+//		                model.addRow(vector);
+//		            }
 					
 				} 
 				catch (SQLException e) {
@@ -475,7 +511,6 @@ public class GUI {
 		
 		search.addActionListener(searchButtonListener);
 	}
-
 	
 	public void clearSearch() {
 		ActionListener searchButtonListener = new ActionListener() {
@@ -507,20 +542,70 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("Help");
+				JFrame popUp = new JFrame();
+				JTextArea textArea = new JTextArea();
+				
+				try {
+					FileReader reader = new FileReader("./lib/help.txt");
+					BufferedReader br = new BufferedReader(reader);
+					textArea.read(br, null);
+					br.close();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				popUp.add(textArea);
+				popUp.getContentPane();
+				popUp.pack();
+				popUp.setVisible(true);
+				
 
 			}
 		};
 
 		help.addActionListener(helpButtonListener);
 	}
-	
+ 	
 	public void sidePanel() {
 		ListSelectionListener JTableListener = new ListSelectionListener() {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent lse) {
 				System.out.println("Table");
-				System.out.println(((DefaultTableModel) searchedData.getModel()).getDataVector().elementAt(searchedData.getSelectedRow()));
+				int column = 0;
+				int row = searchedData.getSelectedRow();
+				String value = searchedData.getModel().getValueAt(row, column).toString();
+				
+				try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
+					
+					PreparedStatement ps = con.prepareStatement(SQL2.sidePanel());
+					
+					ps.setInt(1, Integer.parseInt(value));
+  				    ResultSet rs = ps.executeQuery();
+  				    
+ 
+  					srlMake.setText("Make: " + rs.getString("make"));
+  					srlModel.setText("Model: " + rs.getString("model"));
+  					srlPostcode.setText("Postcode: " + rs.getString("test_postcode"));
+  					srlMiles.setText("Miles: " + rs.getString("test_milage"));
+  					srlYear.setText("Year: " + rs.getString("first_use_date"));
+  					srlTestID.setText("Test ID: " + rs.getString("test_id")); 
+  					srlTestType.setText("Test Type: " + rs.getString("test_type")); 
+  					srlTestClass.setText("Test Class : " + rs.getString("test_class"));
+  					srlTestDate.setText("Test Date: " + rs.getString("test_date"));
+  					srlTestResult.setText("Test Result: " + rs.getString("test_result"));
+  					srlVehicleID.setText("Vehicle ID: " + rs.getString("vehicle_id"));
+  					srlColour.setText("Colour: " + rs.getString("colour"));
+  					srlFuelType.setText("Fuel Type " + rs.getString("fuel_type"));
+  					srlCylinderCapacity.setText("Cylinder Capacity: " + rs.getString("cylinder_capacity"));
+					
+				}
+				catch (SQLException e) {
+					System.out.println("Connection Failed");
+					e.printStackTrace();
+				}
 
 			}
 		};
