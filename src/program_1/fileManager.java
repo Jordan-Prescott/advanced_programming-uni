@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 
 /**
- * fileManager class is CRUDs all files and folders used in the project
+ * fileManager class is CRUDs all files and foldeÍrs used in the project
  * it is used as a central hub for all integrations with the file system and the files.
  * 
  * There is one exception to the above in main where the SQL INSERTS of the data is performed for 

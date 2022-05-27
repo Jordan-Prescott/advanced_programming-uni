@@ -459,47 +459,59 @@ public class GUI {
 				
 				try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
 					
-					String query = null;
 					String base = SQL2.search();
-					String tfMake = make.getText();
-					String tfModel = model.getText();
-					String tfPostcode = postcode.getText();
+					String tfMake = make.getText().toUpperCase();
+					String tfModel = model.getText().toUpperCase();
+					String tfPostcode = postcode.getText().toUpperCase();
 					String tfMiles = miles.getText();
 					String tfYear = year.getText();
 					
-					System.out.println(tfMake);
-					System.out.println(tfModel);
-					System.out.println(tfPostcode);
-					System.out.println(tfMiles);
-					System.out.println(tfYear);
 					
+					if (!tfMake.equals("")) {
+						base += " AND Vehicle.make == " + "'" + tfMake + "'";
+    				}
+					if (!tfModel.equals("")) {
+						base += " AND Vehicle.model == " + "'" + tfModel + "'";
+    				}
+					if (!tfPostcode.equals("")) {
+						base += " AND test_postcode == " + "'" + tfPostcode + "'";
+    				}
+					if (!tfMiles.equals("")) {
+						
+						if(tfMiles.contains("-")) {
+							String[] range = tfMiles.split("-");
+							base += " AND test_milage BETWEEN " + "'" + range[0] + "'" + " AND " + range[1];
+						}
+						else {							
+							base += " AND test_milage == " + "'" + tfMiles + "'";
+						}
+    				}
+					if (!tfYear.equals("")) {
+						base += " AND Vehicle.first_date == " + "'" + tfYear + "'";
+    				}
+					base += ";";
 					
+					System.out.println(base);
+					Statement st = con.createStatement();
+					ResultSet rs = st.executeQuery(base);
+					ResultSetMetaData rsmd = rs.getMetaData();
+					DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
 					
+					int cols=rsmd.getColumnCount();
+					String[] cName = new String[cols];
+					for(int c=0;c<cols;c++) {
+						cName[c]=rsmd.getColumnName(c+1);
+						model.setColumnIdentifiers(cName);
+					}
 					
-					
-					
-					
-					
-//					Statement st = con.createStatement();
-//					ResultSet rs = st.executeQuery(query);
-//					ResultSetMetaData rsmd = rs.getMetaData();
-//					DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
-//					
-//					int cols=rsmd.getColumnCount();
-//					String[] cName = new String[cols];
-//					for(int c=0;c<cols;c++) {
-//						cName[c]=rsmd.getColumnName(c+1);
-//						model.setColumnIdentifiers(cName);
-//					}
-//					
-//		            while (rs.next()) {
-//		                Vector<String> vector = new Vector<String>();
-//		                for (int columnIndex = 1; columnIndex <= cols; columnIndex++) {
-//		                vector.add(rs.getString(columnIndex)); 
-//		                }
-//		                
-//		                model.addRow(vector);
-//		            }
+		            while (rs.next()) {
+		                Vector<String> vector = new Vector<String>();
+		                for (int columnIndex = 1; columnIndex <= cols; columnIndex++) {
+		                vector.add(rs.getString(columnIndex)); 
+		                }
+		                
+		                model.addRow(vector);
+		            }
 					
 				} 
 				catch (SQLException e) {
@@ -517,7 +529,26 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("Clear");
-				searchedData.setModel(new DefaultTableModel());
+//				searchedData.setModel(new DefaultTableModel());
+				DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
+				model.setRowCount(0);
+				model.fireTableDataChanged();
+				
+				srlMake.setText("Make: ");
+					srlModel.setText("Model: ");
+					srlPostcode.setText("Postcode: ");
+					srlMiles.setText("Miles: ");
+					srlYear.setText("Year: ");
+					srlTestID.setText("Test ID: "); 
+					srlTestType.setText("Test Type: "); 
+					srlTestClass.setText("Test Class : ");
+					srlTestDate.setText("Test Date: " );
+					srlTestResult.setText("Test Result: ");
+					srlVehicleID.setText("Vehicle ID: ");
+					srlColour.setText("Colour: " );
+					srlFuelType.setText("Fuel Type ");
+					srlCylinderCapacity.setText("Cylinder Capacity: ");
+				
 
 			}
 		};
