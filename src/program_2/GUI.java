@@ -40,12 +40,32 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.jdbc.JDBCCategoryDataset;
+
 import program_1.SQL;
 
+/**
+ * GUI
+ * 
+ * All grapical user interface related code is hosted in this class, when called an object of GUI is created generating a GUI.
+ * This contains all SWING related functionality and the complete design of the GUI, it also includes interaction with the DB 
+ * for data to be displayed within the JTable.
+ * 
+ * @author jordanprescott
+ *
+ */
 public class GUI {
 
 	private JFrame frame;
@@ -53,12 +73,13 @@ public class GUI {
 	private JPanel buttonPanel;
 	private JPanel searchedDataPanel;
 	private JPanel singleRowPanel;
+	private JPanel analysePanel;
 	private JPanel center;
 	private JPanel north;
 	private JPanel east;
 	private JPanel south;
 	private JPanel west;
-
+	
 	private JTextField make;
 	private JTextField model;
 	private JTextField postcode;
@@ -100,6 +121,7 @@ public class GUI {
 
 		frame = new JFrame("MOT Test Data Application");
 
+		// panels
 		north = new JPanel();
 		east = new JPanel();
 		south = new JPanel();
@@ -109,6 +131,7 @@ public class GUI {
 		searchedDataPanel = new JPanel();
 		singleRowPanel = new JPanel();
 
+		// textFields
 		make = new JTextField();
 		model = new JTextField();
 		postcode = new JTextField();
@@ -119,12 +142,14 @@ public class GUI {
 		analyse = new JButton("Analyse");
 		help = new JButton("Help?");
 
+		// labels
 		lMake = new JLabel("Make:");
 		lModel = new JLabel("Model:");
 		lPostcode = new JLabel("Postcode:");
 		lMiles = new JLabel("Miles:");
 		lYear = new JLabel("Year:");
 		
+		// single row labels
 		srlMake = new JLabel("");
 		srlModel = new JLabel("Model:");
 		srlPostcode = new JLabel("Postcode:");
@@ -140,14 +165,22 @@ public class GUI {
 		srlFuelType= new JLabel("Fuel Type:");
 		srlCylinderCapacity= new JLabel("Cylinder Capacity:");
 
+		// jtable
 		searchedData = new JTable();
 		adScrollPane = new JScrollPane(searchedData);
 
+		// dimensions of frame
 		width = 1025;
 		height = 700;
 
 	}
 
+	/**
+	 * setUpGUI
+	 * 
+	 * Once the constructor is built this method is called and this pulls in all Swing related elements that have been separated for maintainability such as panels, labels, and buttons. 
+	 * This method creates the JFrame and adds all elements needed to the contentPane of of the frame.
+	 */
 	public void setUpGUI() {
 		Container cp = frame.getContentPane();
 		frame.setSize(width, height);
@@ -155,7 +188,6 @@ public class GUI {
 		setUpPanels();
 		setUpLabels();
 		setUpButtons();
-		setUpJTables();
 		setUpJTables();
 		textFieldLabel();
 		searchData();
@@ -169,7 +201,6 @@ public class GUI {
 		cp.add(north, BorderLayout.NORTH);
 		cp.add(east, BorderLayout.EAST);
 		cp.add(south, BorderLayout.SOUTH);
-//		cp.add(west, BorderLayout.WEST);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBackground(Color.LIGHT_GRAY);
@@ -178,8 +209,14 @@ public class GUI {
 
 	}
 
+	/**
+	 * setUpPanels
+	 * 
+	 * Creates and adds all elements needed to panels for the layout of the GUI. 
+	 */
 	public void setUpPanels() {
 
+		// contains all buttons added in the north panel
 		buttonPanel.add(lMake);
 		buttonPanel.add(make);
 		buttonPanel.add(lModel);
@@ -195,10 +232,13 @@ public class GUI {
 		buttonPanel.setBackground(Color.LIGHT_GRAY);
 		buttonPanel.setLayout(new FlowLayout());
 
+		// contains to the JTable and is where the data is displayed
 		searchedDataPanel.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.lightGray));
 		searchedDataPanel.setLayout(new BorderLayout());
 		searchedDataPanel.add(adScrollPane, BorderLayout.CENTER);
-
+		
+		
+		// Green box to the right on the GUI displaying all elements of the row selected. This is a series of labels that get updated once clicked.
 		singleRowPanel.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.decode("#5B9279")));
 		singleRowPanel.setBackground(Color.decode("#5B9279"));
 		singleRowPanel.add(srlMake);
@@ -217,24 +257,28 @@ public class GUI {
 		singleRowPanel.add(srlCylinderCapacity);
 		singleRowPanel.setLayout(new FlowLayout());
 
+		// hosts the searchedDataPanel with the JTable in it and creates border
 		center.setPreferredSize(new Dimension(0, 150));
 		center.setLayout(new BorderLayout());
 		center.add(searchedDataPanel, BorderLayout.CENTER);
 		center.setBackground(Color.LIGHT_GRAY);
 		center.setBorder(BorderFactory.createMatteBorder(0, 10, 0, 0, Color.decode("#EAE6E5")));
 
+		// hosts the buttonPanel where all the search criteria is entered
 		north.setPreferredSize(new Dimension(0, 75));
 		north.setBackground(Color.LIGHT_GRAY);
 		north.setBorder(BorderFactory.createMatteBorder(10, 10, 0, 10, Color.decode("#EAE6E5")));
 		north.setLayout(new BorderLayout());
 		north.add(buttonPanel, BorderLayout.CENTER);
 
+		// hosts the singleRowPanel
 		east.setPreferredSize(new Dimension(250, 500));
 		east.setLayout(new BorderLayout());
 		east.add(singleRowPanel, BorderLayout.CENTER);
 		east.setBackground(Color.decode("#5B9279"));
 		east.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 10, Color.decode("#EAE6E5")));
 
+		// hosts the function buttons at the botton of the GUI
 		south.setPreferredSize(new Dimension(0, 50));
 		south.setBackground(Color.decode("#EAE6E5"));
 		south.setLayout(new BorderLayout(10, 0));
@@ -242,11 +286,17 @@ public class GUI {
 		south.add(analyse, BorderLayout.CENTER);
 		south.setBorder(BorderFactory.createMatteBorder(0, 10, 10, 10, Color.decode("#EAE6E5")));
 
+		// used to set border between center and the edge of GUI
 		west.setPreferredSize(new Dimension(250, 500));
 		west.setBackground(Color.WHITE);
 
 	}
 
+	/**
+	 * setUpButtons
+	 * 
+	 * Creates buttons and sets design like color and font
+	 */
 	public void setUpButtons() {
 
 		make.setPreferredSize(new Dimension(100, 30));
@@ -262,7 +312,7 @@ public class GUI {
 		model.setFont(new Font("SansSerif", Font.ITALIC, 13));
 
 		postcode.setPreferredSize(new Dimension(100, 30));
-		postcode.setText("M");
+		postcode.setText("GL");
 		postcode.setBackground(Color.decode("#EAE6E5"));
 		postcode.setForeground(Color.decode("#A3938F"));
 		postcode.setFont(new Font("SansSerif", Font.ITALIC, 13));
@@ -285,7 +335,6 @@ public class GUI {
 		search.setBorderPainted(false);
 		search.setForeground(Color.decode("#EAE6E5"));
 
-//		analyse.setPreferredSize(new Dimension(100, 40));
 		analyse.setBackground(Color.decode("#5B9279"));
 		analyse.setOpaque(true);
 		analyse.setBorderPainted(false);
@@ -418,11 +467,21 @@ public class GUI {
 	
 	}
 
+	/**
+	 * setUpJTables
+	 * 
+	 * Adds JTable functionality 
+	 */
 	public void setUpJTables() {
 		searchedData.setAutoCreateRowSorter(true);
 	}
 
-	
+	/*
+	 * textFieldLabel
+	 * 
+	 * This method listens for when user click into the text fields on the search panel, once clicked the text should be removed and set to black so its clear 
+	 * the user is now entering criteria that will be used in search.
+	 */
 	public void textFieldLabel() {
 		MouseListener textFieldListener = new MouseAdapter() {
 			@Override
@@ -430,14 +489,19 @@ public class GUI {
 				Object o = ae.getSource();
 
 				if (o == make) {
+					make.setForeground(Color.BLACK);
 					make.setText("");
 				} else if (o == model) {
+					model.setForeground(Color.BLACK);
 					model.setText("");
 				} else if (o == postcode) {
+					postcode.setForeground(Color.BLACK);
 					postcode.setText("");
 				} else if (o == miles) {
+					miles.setForeground(Color.BLACK);
 					miles.setText("");
 				} else if (o == year) {
+					year.setForeground(Color.BLACK);
 					year.setText("");
 				}
 			}
@@ -450,72 +514,100 @@ public class GUI {
 		year.addMouseListener(textFieldListener);
 
 	}
-
+	
+	/*
+	 * searchData
+	 * 
+	 * Listens for when the search button is clicked as this indicates the user has filled in criteria and is looking to get results. 
+	 * Once clicked the method pulls the data entered in the text fields to construct an SQL query based on the data, if a text field is blank it 
+	 * is ignored in the construction of the query. Once constructed the query is executed and the method then checks if the result set is empty, if empty a pop up 
+	 * window will be displayed stating no results found. If data is returned that data is iterated over and displayed in the JTable.
+	 */
 	public void searchData() {
 		ActionListener searchButtonListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("Search");
-				
+				searchedData.setModel(new DefaultTableModel());
+
 				try (Connection con = DriverManager.getConnection("jdbc:sqlite:./lib/testsDB.db")) {
-					
+
+					// gets the data entered
 					String base = SQL2.search();
 					String tfMake = make.getText().toUpperCase();
 					String tfModel = model.getText().toUpperCase();
 					String tfPostcode = postcode.getText().toUpperCase();
 					String tfMiles = miles.getText();
 					String tfYear = year.getText();
-					
-					
+
+					// constructs query
 					if (!tfMake.equals("")) {
 						base += " AND Vehicle.make == " + "'" + tfMake + "'";
-    				}
+					}
 					if (!tfModel.equals("")) {
 						base += " AND Vehicle.model == " + "'" + tfModel + "'";
-    				}
+					}
 					if (!tfPostcode.equals("")) {
 						base += " AND test_postcode == " + "'" + tfPostcode + "'";
-    				}
+					}
 					if (!tfMiles.equals("")) {
-						
-						if(tfMiles.contains("-")) {
+
+						if (tfMiles.contains("-")) {
 							String[] range = tfMiles.split("-");
-							base += " AND test_milage BETWEEN " + "'" + range[0] + "'" + " AND " + range[1];
-						}
-						else {							
+							base += " AND test_milage BETWEEN " + "'" + range[0] + "'" + " AND " + "'" + range[1] + "'";
+						} else {
 							base += " AND test_milage == " + "'" + tfMiles + "'";
 						}
-    				}
+					}
 					if (!tfYear.equals("")) {
-						base += " AND Vehicle.first_date == " + "'" + tfYear + "'";
-    				}
+						int eoYear = Integer.parseInt(tfYear) + 1;
+						base += " AND Vehicle.first_use_date BETWEEN " + "'" + tfYear + "'" + " AND " + "'" + Integer.toString(eoYear) + "'";
+					}
 					base += ";";
-					
+
 					System.out.println(base);
 					Statement st = con.createStatement();
 					ResultSet rs = st.executeQuery(base);
 					ResultSetMetaData rsmd = rs.getMetaData();
 					DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
-					
-					int cols=rsmd.getColumnCount();
-					String[] cName = new String[cols];
-					for(int c=0;c<cols;c++) {
-						cName[c]=rsmd.getColumnName(c+1);
-						model.setColumnIdentifiers(cName);
+
+					// checks if result set is empty to display pop up window
+					if (rs.next() == false) {
+						System.out.println("ResultSet in empty in Java");
+					    Popup p;
+				        JFrame f = new JFrame("No Results.");
+				        JLabel l = new JLabel("No Results Found.");
+				        f.setSize(300, 100);				 
+				        PopupFactory pf = new PopupFactory();				 
+				        JPanel p2 = new JPanel();				 
+				        p2.setBackground(Color.WHITE);				 
+				        p2.add(l);				 
+				        p = pf.getPopup(f, p2, 180, 100);			 
+				 
+				        f.add(p2);
+				        f.show();
+					    
+						
+					} else { // adds data to the JTable
+
+						int cols = rsmd.getColumnCount();
+						String[] cName = new String[cols];
+						for (int c = 0; c < cols; c++) {
+							cName[c] = rsmd.getColumnName(c + 1);
+							model.setColumnIdentifiers(cName);
+						}
+
+						while (rs.next()) {
+							Vector<String> vector = new Vector<String>();
+							for (int columnIndex = 1; columnIndex <= cols; columnIndex++) {
+								vector.add(rs.getString(columnIndex));
+							}
+
+							model.addRow(vector);
+						}
+
 					}
-					
-		            while (rs.next()) {
-		                Vector<String> vector = new Vector<String>();
-		                for (int columnIndex = 1; columnIndex <= cols; columnIndex++) {
-		                vector.add(rs.getString(columnIndex)); 
-		                }
-		                
-		                model.addRow(vector);
-		            }
-					
-				} 
-				catch (SQLException e) {
-					System.out.println("Connection Failed");
+				} catch (SQLException e) {
 				}
 
 			}
@@ -529,10 +621,10 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("Clear");
-//				searchedData.setModel(new DefaultTableModel());
-				DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
-				model.setRowCount(0);
-				model.fireTableDataChanged();
+				searchedData.setModel(new DefaultTableModel());
+//				DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
+//				model.setRowCount(0);
+//				model.fireTableDataChanged();
 				
 				srlMake.setText("Make: ");
 					srlModel.setText("Model: ");
@@ -546,7 +638,7 @@ public class GUI {
 					srlTestResult.setText("Test Result: ");
 					srlVehicleID.setText("Vehicle ID: ");
 					srlColour.setText("Colour: " );
-					srlFuelType.setText("Fuel Type ");
+					srlFuelType.setText("Fuel Type: ");
 					srlCylinderCapacity.setText("Cylinder Capacity: ");
 				
 
@@ -556,24 +648,39 @@ public class GUI {
 		clearSearch.addActionListener(searchButtonListener);
 	}
 
+	/*
+	 * analyseData
+	 * 
+	 * listens for button Pass Rate Year on GUI to be pressed and generates a JFreeChart based on criteria entered.
+	 */
 	public void analyseData() {
 		ActionListener analyseButtonListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("Analyse");
-
+				System.out.println("Analyse By Age");
+				
+				String base = SQL2.analyse();
+				String tfMake = make.getText().toUpperCase();
+				String tfModel = model.getText().toUpperCase();
+				
+				base += " AND Vehicle.make == " + "'" + tfMake + "'" + " AND Vehicle.model == " + "'" + tfModel + "'";
+				System.out.println(base);
+				JFChart jfc = new JFChart(base, "MOT Test Pass Rate " + tfMake + " " + tfModel, "Age(Years)");
+				
 			}
 		};
 
 		analyse.addActionListener(analyseButtonListener);
 	}
 	
+
+	
 	public void helpRequest() {
 		ActionListener helpButtonListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("Help");
-				JFrame popUp = new JFrame();
+				JFrame helpPage = new JFrame();
 				JTextArea textArea = new JTextArea();
 				
 				try {
@@ -587,10 +694,10 @@ public class GUI {
 					e.printStackTrace();
 				}
 				
-				popUp.add(textArea);
-				popUp.getContentPane();
-				popUp.pack();
-				popUp.setVisible(true);
+				helpPage.add(textArea);
+				helpPage.getContentPane();
+				helpPage.pack();
+				helpPage.setVisible(true);
 				
 
 			}
@@ -599,6 +706,13 @@ public class GUI {
 		help.addActionListener(helpButtonListener);
 	}
  	
+	
+	/**
+	 * sidePanel
+	 * 
+	 * Listens for when the JTable is clicked and takes in the values of where the user has clicked. It then updates the labels
+	 * in the sidePanel label with the results of an SQL query to get all 13 elements of the test.
+	 */
 	public void sidePanel() {
 		ListSelectionListener JTableListener = new ListSelectionListener() {
 			

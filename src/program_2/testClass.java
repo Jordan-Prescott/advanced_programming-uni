@@ -25,165 +25,105 @@ import javax.swing.border.EmptyBorder;
 
 public class testClass {
 	
-	private JFrame frame;
-	private JTextField make;
-	private JTextField model;
-	private JTextField postcode;
-	private JTextField miles; 
-	private JTextField year;
-	private JButton search;
-	private JButton analyse;
-	
-	private JPanel panel;
-	private JPanel westPanel;
-	private JPanel buttonPanel;
-	
-	private JPanel center;
-	private JPanel north;
-	private JPanel east;
-	private JPanel south;
-	private JPanel west;
-	
-	
-	private int width;
-	private int height;
-
-	
-	public testClass() {
-		
-		frame = new JFrame("MOT Test Data Application");
-		panel = new JPanel();
-		
-		make = new JTextField("Make");
-		model = new JTextField("Model");
-		postcode = new JTextField("Postcode");
-		miles = new JTextField("Miles");
-		year = new JTextField("Year");
-		search = new JButton("Search");
-		analyse = new JButton("Analyse");
-		
-		center = new JPanel();
-		north = new JPanel();
-		east = new JPanel();
-		south = new JPanel();
-		west = new JPanel();
-		
-		buttonPanel = new JPanel();
-		
-		width = 1100;
-		height = 700;
-
-	}
-	
-	public void setUpGUI() {
-		Container cp = frame.getContentPane();
-		frame.setSize(width, height);
-		
-		setUpPanels();
-		setUpButtons();
-		
-		cp.setLayout(new BorderLayout(10, 10));
-		cp.add(center, BorderLayout.CENTER);
-		cp.add(north, BorderLayout.NORTH);
-		cp.add(east, BorderLayout.EAST);
-		cp.add(south, BorderLayout.SOUTH);
-//		cp.add(west, BorderLayout.WEST);
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBackground(Color.LIGHT_GRAY);
-		cp.setBackground(Color.decode("#EAE6E5")); 
-		frame.setVisible(true);
-	
-	}
-	
-	public void setUpPanels() {
-
-		buttonPanel.add(make);
-		buttonPanel.add(model);
-		buttonPanel.add(postcode);
-		buttonPanel.add(miles);
-		buttonPanel.add(year);
-		buttonPanel.add(search);
-		buttonPanel.setBackground(Color.LIGHT_GRAY);
-		buttonPanel.setLayout(new FlowLayout());
-		
-		center.setPreferredSize(new Dimension (0, 150));
-		center.setBackground(Color.LIGHT_GRAY);
-		center.setBorder(BorderFactory.createMatteBorder(0, 10, 0, 0, Color.decode("#EAE6E5")));
-		
-		north.setPreferredSize(new Dimension (0, 75));
-		north.setBackground(Color.LIGHT_GRAY);
-		north.setBorder(BorderFactory.createMatteBorder(10, 10, 0, 10, Color.decode("#EAE6E5")));
-		north.setLayout(new BorderLayout());
-		north.add(buttonPanel, BorderLayout.CENTER);
-		
-		
-		east.setPreferredSize(new Dimension(250, 500));
-		east.setBackground(Color.LIGHT_GRAY);
-		east.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 10, Color.decode("#EAE6E5")));
-		
-		south.setPreferredSize(new Dimension (0, 50));
-		south.setBackground(Color.LIGHT_GRAY);
-		south.setLayout(new BorderLayout());
-		south.add(analyse, BorderLayout.CENTER);
-		south.setBorder(BorderFactory.createMatteBorder(0, 10, 10, 10, Color.decode("#EAE6E5")));
-
-		west.setPreferredSize(new Dimension(250, 500));
-		west.setBackground(Color.LIGHT_GRAY);
-		
-	}
-	
-	public void setUpButtons() {
-		
-		make.setPreferredSize(new Dimension(100, 30));
-		make.setBackground(Color.decode("#EAE6E5"));
-		make.setForeground(Color.decode("#A3938F"));
-		make.setFont(new Font("SansSerif",Font.ITALIC,13));
-		
-		model.setPreferredSize(new Dimension(100, 30));
-		model.setBackground(Color.decode("#EAE6E5"));
-		model.setForeground(Color.decode("#A3938F"));
-		model.setFont(new Font("SansSerif",Font.ITALIC,13));
-		
-		postcode.setPreferredSize(new Dimension(100, 30));
-		postcode.setBackground(Color.decode("#EAE6E5"));
-		postcode.setForeground(Color.decode("#A3938F"));
-		postcode.setFont(new Font("SansSerif",Font.ITALIC,13));
-		
-		miles.setPreferredSize(new Dimension(100, 30));
-		miles.setBackground(Color.decode("#EAE6E5"));
-		miles.setForeground(Color.decode("#A3938F"));
-		miles.setFont(new Font("SansSerif",Font.ITALIC,13));
-		
-		year.setPreferredSize(new Dimension(100, 30));
-		year.setBackground(Color.decode("#EAE6E5"));
-		year.setForeground(Color.decode("#A3938F"));
-		year.setFont(new Font("SansSerif",Font.ITALIC,13));
-		
-		search.setPreferredSize(new Dimension(100, 22));
-		search.setBackground(Color.decode("#5B9279"));
-		search.setOpaque(true);
-		search.setBorderPainted(false);
-		search.setForeground(Color.decode("#EAE6E5"));
-		
-		analyse.setPreferredSize(new Dimension(100, 40));
-		analyse.setBackground(Color.decode("#5B9279"));
-		analyse.setOpaque(true);
-		analyse.setBorderPainted(false);
-		analyse.setForeground(Color.decode("#EAE6E5"));
-		
-	}
-	
-	
-	public void textFieldLabel() {
-		ActionListener buttonListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent a) {
-				System.out.println("test");
-			}
-		};
-		
-		//TODO: add a button group
-	}
+//
+//	int total10 = 0;
+//	int passed10 = 0;
+//	int total11 = 0;
+//	int passed11 = 0;
+//	int total12 = 0;
+//	int passed12 = 0;
+//	int total13 = 0;
+//	int passed13 = 0;
+//	int total14 = 0;
+//	int passed14 = 0;
+//	int total15 = 0;
+//	int passed15 = 0;
+//	int total16 = 0;
+//	int passed16 = 0;
+//	int total17 = 0;
+//	int passed17 = 0;
+//	int total18 = 0;
+//	int passed18 = 0;
+//	int total19 = 0;
+//	int passed19 = 0;
+//	int total20 = 0;
+//	int passed20 = 0;
+//
+//	System.out.println("PassRate Start");
+//	while (rs.next()) {
+//
+//		if (rs.getString(2).contains("2010")) {
+//			total10++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed10++;
+//			}
+//		} else if (rs.getString(2).contains("2011")) {
+//			total11++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed11++;
+//			}
+//		} else if (rs.getString(2).contains("2012")) {
+//			total12++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed12++;
+//			}
+//		} else if (rs.getString(2).contains("2013")) {
+//			total13++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed13++;
+//			}
+//		} else if (rs.getString(2).contains("2014")) {
+//			total14++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed15++;
+//			}
+//		} else if (rs.getString(2).contains("2015")) {
+//			total15++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed15++;
+//			}
+//		} else if (rs.getString(2).contains("2016")) {
+//			total16++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed16++;
+//			}
+//		} else if (rs.getString(2).contains("2017")) {
+//			total17++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed17++;
+//			}
+//		} else if (rs.getString(2).contains("2018")) {
+//			total18++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed18++;
+//			}
+//		} else if (rs.getString(2).contains("2019")) {
+//			total19++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed19++;
+//			}
+//		} else if (rs.getString(2).contains("2020")) {
+//			total20++;
+//			if (rs.getString(1).equals("P") || rs.getString(1).equals("PRS")) {
+//				passed20++;
+//			}
+//		}
+//
+//	}
+//
+//	dataSet.addValue(passRate(total10, passed10), passRate, "2010");
+//	dataSet.addValue(passRate(total11, passed11), passRate, "2011");
+//	dataSet.addValue(passRate(total12, passed12), passRate, "2012");
+//	dataSet.addValue(passRate(total13, passed13), passRate, "2013");
+//	dataSet.addValue(passRate(total14, passed14), passRate, "2014");
+//	dataSet.addValue(passRate(total15, passed15), passRate, "2015");
+//	dataSet.addValue(passRate(total16, passed16), passRate, "2016");
+//	dataSet.addValue(passRate(total17, passed17), passRate, "2017");
+//	dataSet.addValue(passRate(total18, passed18), passRate, "2018");
+//	dataSet.addValue(passRate(total19, passed19), passRate, "2019");
+//	dataSet.addValue(passRate(total20, passed20), passRate, "2020");
+//	System.out.println("PassRate Done");
+//
+//	
 }
 

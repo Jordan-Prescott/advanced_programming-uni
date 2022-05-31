@@ -54,3 +54,8 @@ lib/.DS_Store
 lib/testsDB.db
 *.db
 .DS_Store
+.DS_Store
+lib/.DS_Store
+lib/input/testingData10k.csv
+lib/output/errors.txt
+lib/testsDB.db

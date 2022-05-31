@@ -61,12 +61,12 @@ public class SQL { // SQL commands stored in one place for maintenance
 	public static String createIndices() {
 		return ""
 				+ "CREATE INDEX idx_Vehicle_vehicle_id ON Vehicle (vehicle_id);"
-				+ "CREATE INDEX idx_Vehicle_model ON Vehicle (model);"
+				+ "CREATE INDEX idx_Vehicle_make_model ON Vehicle (make, model);"
 				+ "CREATE INDEX idx_Vehicle_first_use_date ON Vehicle (first_use_date);"
 				+ "CREATE INDEX idx_Test_test_milage ON Test (test_milage);"
 				+ "CREATE INDEX idx_Test_test_postcode ON Test (test_postcode);"
 				+ "CREATE INDEX idx_Test_test_result ON Test (test_result);"
-				+ "CREATE INDEX idx_Test_resuclt_milage ON Test (test_result, test_milage);"
+				+ "CREATE INDEX idx_Test_result_milage ON Test (test_result, test_milage);"
 				+ "";
 				
 	}
