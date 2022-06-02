@@ -48,6 +48,7 @@ Help Page.
 		This button will pop up this page for the user to get information on the program 
 		and how it works.
 	 #Analyse: 
-		This button looks to anaylse the data returned from the search by age and pass rate. 
+		This button looks to anaylse the data returned on pass rate by age and milage. It creates
+		charts one for age and the other for miles. 
 		For example searching for BMW 3 Series will display the pass rate for the past ten years.
 

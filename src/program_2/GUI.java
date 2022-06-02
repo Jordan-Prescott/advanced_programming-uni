@@ -40,6 +40,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.event.ListSelectionEvent;
@@ -353,6 +354,11 @@ public class GUI {
 
 	}
 
+	/**
+	 * setUpLabels
+	 * 
+	 * Creates labels for in text field as placeholder and in the side panel.
+	 */
 	public void setUpLabels() {
 		lMake.setForeground(Color.decode("#20221B"));
 		lMake.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -476,7 +482,7 @@ public class GUI {
 		searchedData.setAutoCreateRowSorter(true);
 	}
 
-	/*
+	/**
 	 * textFieldLabel
 	 * 
 	 * This method listens for when user click into the text fields on the search panel, once clicked the text should be removed and set to black so its clear 
@@ -515,7 +521,7 @@ public class GUI {
 
 	}
 	
-	/*
+	/**
 	 * searchData
 	 * 
 	 * Listens for when the search button is clicked as this indicates the user has filled in criteria and is looking to get results. 
@@ -616,30 +622,34 @@ public class GUI {
 		search.addActionListener(searchButtonListener);
 	}
 	
+	/**
+	 * clearSearch
+	 * 
+	 * This cancels/ clears the searched data, when the Jtable is populated and a row is selected filling in the sidepanel the user 
+	 * can click the clear button and this will give the table a new model and set the labels back to original text.
+	 * 
+	 */
 	public void clearSearch() {
 		ActionListener searchButtonListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				System.out.println("Clear");
 				searchedData.setModel(new DefaultTableModel());
-//				DefaultTableModel model = (DefaultTableModel) searchedData.getModel();
-//				model.setRowCount(0);
-//				model.fireTableDataChanged();
 				
 				srlMake.setText("Make: ");
-					srlModel.setText("Model: ");
-					srlPostcode.setText("Postcode: ");
-					srlMiles.setText("Miles: ");
-					srlYear.setText("Year: ");
-					srlTestID.setText("Test ID: "); 
-					srlTestType.setText("Test Type: "); 
-					srlTestClass.setText("Test Class : ");
-					srlTestDate.setText("Test Date: " );
-					srlTestResult.setText("Test Result: ");
-					srlVehicleID.setText("Vehicle ID: ");
-					srlColour.setText("Colour: " );
-					srlFuelType.setText("Fuel Type: ");
-					srlCylinderCapacity.setText("Cylinder Capacity: ");
+				srlModel.setText("Model: ");
+				srlPostcode.setText("Postcode: ");
+				srlMiles.setText("Miles: ");
+				srlYear.setText("Year: ");
+				srlTestID.setText("Test ID: "); 
+				srlTestType.setText("Test Type: "); 
+				srlTestClass.setText("Test Class : ");
+				srlTestDate.setText("Test Date: " );
+				srlTestResult.setText("Test Result: ");
+				srlVehicleID.setText("Vehicle ID: ");
+				srlColour.setText("Colour: " );
+				srlFuelType.setText("Fuel Type: ");
+				srlCylinderCapacity.setText("Cylinder Capacity: ");
 				
 
 			}
@@ -648,7 +658,7 @@ public class GUI {
 		clearSearch.addActionListener(searchButtonListener);
 	}
 
-	/*
+	/**
 	 * analyseData
 	 * 
 	 * listens for button Pass Rate Year on GUI to be pressed and generates a JFreeChart based on criteria entered.
@@ -657,7 +667,7 @@ public class GUI {
 		ActionListener analyseButtonListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("Analyse By Age");
+				System.out.println("Analyse");
 				
 				String base = SQL2.analyse();
 				String tfMake = make.getText().toUpperCase();
@@ -665,7 +675,8 @@ public class GUI {
 				
 				base += " AND Vehicle.make == " + "'" + tfMake + "'" + " AND Vehicle.model == " + "'" + tfModel + "'";
 				System.out.println(base);
-				JFChart jfc = new JFChart(base, "MOT Test Pass Rate " + tfMake + " " + tfModel, "Age(Years)");
+				JFChart age = new JFChart(base, "MOT Test Pass Rate " + tfMake + " " + tfModel + " By Age(Years)", "Age(Years)");
+				JFChart miles = new JFChart(base, "MOT Test Pass Rate " + tfMake + " " + tfModel + " By Miles", "Miles in K");
 				
 			}
 		};
@@ -674,7 +685,11 @@ public class GUI {
 	}
 	
 
-	
+	/**
+	 *helpRequest
+	 *
+	 * Creates a new frame with help instructions displayed to user. The details displayed are pulled in from the ./lib/help.txt file.
+	 */
 	public void helpRequest() {
 		ActionListener helpButtonListener = new ActionListener() {
 			@Override
@@ -705,7 +720,6 @@ public class GUI {
 
 		help.addActionListener(helpButtonListener);
 	}
- 	
 	
 	/**
 	 * sidePanel
@@ -715,9 +729,12 @@ public class GUI {
 	 */
 	public void sidePanel() {
 		ListSelectionListener JTableListener = new ListSelectionListener() {
+		
+		@Override
+		public void valueChanged(ListSelectionEvent lse) {
 			
-			@Override
-			public void valueChanged(ListSelectionEvent lse) {
+			if(!lse.getValueIsAdjusting()) {
+				
 				System.out.println("Table");
 				int column = 0;
 				int row = searchedData.getSelectedRow();
@@ -728,34 +745,36 @@ public class GUI {
 					PreparedStatement ps = con.prepareStatement(SQL2.sidePanel());
 					
 					ps.setInt(1, Integer.parseInt(value));
-  				    ResultSet rs = ps.executeQuery();
-  				    
- 
-  					srlMake.setText("Make: " + rs.getString("make"));
-  					srlModel.setText("Model: " + rs.getString("model"));
-  					srlPostcode.setText("Postcode: " + rs.getString("test_postcode"));
-  					srlMiles.setText("Miles: " + rs.getString("test_milage"));
-  					srlYear.setText("Year: " + rs.getString("first_use_date"));
-  					srlTestID.setText("Test ID: " + rs.getString("test_id")); 
-  					srlTestType.setText("Test Type: " + rs.getString("test_type")); 
-  					srlTestClass.setText("Test Class : " + rs.getString("test_class"));
-  					srlTestDate.setText("Test Date: " + rs.getString("test_date"));
-  					srlTestResult.setText("Test Result: " + rs.getString("test_result"));
-  					srlVehicleID.setText("Vehicle ID: " + rs.getString("vehicle_id"));
-  					srlColour.setText("Colour: " + rs.getString("colour"));
-  					srlFuelType.setText("Fuel Type " + rs.getString("fuel_type"));
-  					srlCylinderCapacity.setText("Cylinder Capacity: " + rs.getString("cylinder_capacity"));
+					ResultSet rs = ps.executeQuery();
 					
+					
+					srlMake.setText("Make: " + rs.getString("make"));
+					srlModel.setText("Model: " + rs.getString("model"));
+					srlPostcode.setText("Postcode: " + rs.getString("test_postcode"));
+					srlMiles.setText("Miles: " + rs.getString("test_milage"));
+					srlYear.setText("Year: " + rs.getString("first_use_date"));
+					srlTestID.setText("Test ID: " + rs.getString("test_id")); 
+					srlTestType.setText("Test Type: " + rs.getString("test_type")); 
+					srlTestClass.setText("Test Class : " + rs.getString("test_class"));
+					srlTestDate.setText("Test Date: " + rs.getString("test_date"));
+					srlTestResult.setText("Test Result: " + rs.getString("test_result"));
+					srlVehicleID.setText("Vehicle ID: " + rs.getString("vehicle_id"));
+					srlColour.setText("Colour: " + rs.getString("colour"));
+					srlFuelType.setText("Fuel Type " + rs.getString("fuel_type"));
+					srlCylinderCapacity.setText("Cylinder Capacity: " + rs.getString("cylinder_capacity"));
 				}
+				
 				catch (SQLException e) {
 					System.out.println("Connection Failed");
 					e.printStackTrace();
 				}
-
 			}
-		};
+			
 
-		searchedData.getSelectionModel().addListSelectionListener(JTableListener);
+		}
+	};
+
+	searchedData.getSelectionModel().addListSelectionListener(JTableListener);
 	}
 }
 

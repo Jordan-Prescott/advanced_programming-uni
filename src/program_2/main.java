@@ -11,6 +11,7 @@ public class main {
 
 	public static void main(String[] args) {
 
+		// creates gui
 		GUI gui = new GUI();
 		gui.setUpGUI();
 
