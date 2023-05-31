@@ -10,15 +10,15 @@ The Desktop Application, which carried a weightage of 70%, required developing a
 
 NOTE: Both programs can be found in ./src/
 
-# Screenshots of Desktop Application
-BMW 3 series result sorted by milage.
+## Screenshots of Desktop Application
+### BMW 3 series result sorted by milage.
 ![BMW 3 Series in Milage](./Screenshots/GUI_Descending_Milage_Column_Heading.png "BMW 3 Series in Milage")
 
-2015 Vehicles under 2k miles
+### 2015 Vehicles under 2k miles
 ![2015 Vehicles under 2k miles](./Screenshots/Search_Results_Vehicles_used_in_2015_under_2k_miles.png "2015 Vehicles under 2k miles")
 
-Analysis of Results
+### Analysis of Results
 ![Analysing Result](./Screenshots/Analysis_Pass_Rate_by_Age_and_Miles_Kia_Rio.png "Analysing Result")
 
-No Results Found
+### No Results Found
 ![No Results Found](./Screenshots/Search_Results_Vehciles_with_minus_1_miles.png "No Results Found")
